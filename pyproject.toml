@@ -1,0 +1,28 @@
+[project]
+name = "jarvis"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.uv.workspace]
+members = ["cerebro", "mcp/*", "clientes/*"]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.7.0",
+    "pytest>=9.2.0",
+    "ruff>=0.17.6",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["cerebro", "mcp", "clientes"]
+addopts = ["--import-mode=importlib", "--strict-markers", "-ra"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "PLC2401", "PLC2403"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["jarvis_*"]

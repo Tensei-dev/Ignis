@@ -110,24 +110,26 @@ flowchart TD
 
 ## Estrutura do repositório
 
-> Planejada. Pode mudar conforme o projeto avança.
-
 ```text
 jarvis/
-├── brain/            # Orquestrador: wake word, STT, agente e TTS
-├── mcp-servers/      # Um servidor MCP por integração
-│   ├── tasks/        # Mercado e contas
-│   ├── home/         # Home Assistant
-│   ├── calendar/     # Google Agenda
-│   ├── spotify/
-│   ├── reads/        # RSS e Gmail (só leitura)
-│   └── mqtt/
-├── firmware/         # Código dos nós ESP32 e Arduino
-├── android/          # App do celular
-├── evals/            # Suíte de comandos com as ações esperadas
-├── deploy/           # Docker Compose e configuração do Raspberry Pi
-└── .github/workflows # CI
+├── cerebro/          # Orquestrador: palavra de ativação, STT, agente e TTS
+├── mcp/              # Um servidor MCP por integração, cada um como pacote próprio
+├── clientes/         # Pontos de voz que conversam com o cérebro (PC e Android)
+└── docs/             # Documentação, registro de decisões e ADRs
 ```
+
+Cada pasta principal tem um README explicando o que mora nela.
+
+Convenções:
+
+- O código e a documentação são escritos em português do Brasil.
+- Nomes de código e de arquivos não levam acento nem cedilha.
+- O código segue a PEP 8.
+- A pasta `mcp/` não tem `__init__.py`. Cada servidor usa o layout `src/` para não conflitar com o SDK `mcp`.
+
+O cliente do PC é um processo separado do cérebro desde a v0. Na v1, o cérebro muda para o Raspberry Pi sem precisar ser reescrito.
+
+As decisões tomadas até aqui estão em [`docs/decisoes.md`](docs/decisoes.md).
 
 ## Roadmap
 

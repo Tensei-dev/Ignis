@@ -1,0 +1,37 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# --- Ambiente virtual ---
+.venv/
+
+# --- Caches das ferramentas ---
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Segredos e credenciais (T05) ---
+.env
+.env.*
+!.env.example
+credentials.json
+token.json
+.cache
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Editores ---
+.vscode/*
+!.vscode/settings.json
+.idea/
+
+# --- Sistema operacional ---
+Thumbs.db
+desktop.ini
+.DS_Store
