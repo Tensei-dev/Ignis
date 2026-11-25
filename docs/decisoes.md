@@ -258,3 +258,19 @@ Desbloquear o Windows com "Ignis Arise" é um objetivo, mas fica para uma histó
 **D51 · 2026-11-25 · Ignis em segundo plano, com interface própria**
 O cliente do PC roda em segundo plano: inicia com o Windows, tem um ícone na bandeja, só permite uma instância e grava os logs em arquivo. O Ignis terá uma interface visual própria e interativa, desenhada numa história futura, assim como a escolha da tecnologia. O Ignis é um agente que controla várias funções do PC, cada uma como ferramenta de um servidor MCP, com confirmação para ações sensíveis.
 *Motivo:* requisitos do produto definidos pelo autor.
+
+**D52 · 2026-11-25 · Dois detectores sempre ligados, e o estado do PC decide qual vale**
+O cliente tem dois detectores do sherpa-onnx, um para "Ignis Arise" e outro para "Ignis", cada um com as suas iscas (Igris, Iris e Agnes). Os dois recebem todo o áudio. Com o PC bloqueado ou em repouso, só a frase ativa; com ele em uso, a frase ou o nome. Depois de uma ativação, outras são ignoradas por 2 s.
+*Motivo:* o sherpa-onnx 2.0.3 ignorou, num teste, as frases passadas a cada fluxo, e usou só as do arquivo de configuração. Os dois detectores juntos custam cerca de 3,5% de um núcleo. A pausa evita que "Ignis Arise" vire duas ativações, porque o detector do nome dispara no "Ignis" e o da frase logo depois.
+
+**D53 · 2026-11-25 · Modelo completo em `%LOCALAPPDATA%\Ignis\modelos`, conferido por SHA-256**
+O cliente usa o modelo completo do detector, e não o compactado (int8). O comando `ignis-pc baixar-modelos` baixa o pacote do GitHub, confere o SHA-256 e extrai só os arquivos necessários, pelo nome, em `%LOCALAPPDATA%\Ignis\modelos`. A variável `IGNIS_MODELOS` muda esse lugar.
+*Motivo:* com voz sintética, o modelo completo acertou 12 de 12 chamadas pelo nome e o compactado, 9 de 12, com a mesma CPU. A conferência recusa um pacote alterado, e extrair pelo nome impede que um pacote malicioso grave fora da pasta. O `%LOCALAPPDATA%` é onde um programa de segundo plano guarda os seus dados.
+
+**D54 · 2026-11-25 · Estado do PC lido do Windows, com o bloqueio como padrão na dúvida**
+O módulo `sessao.py` lê o bloqueio com `WTSQuerySessionInformationW` e o tempo sem uso com `GetLastInputInfo`. Se o Windows não responder, a sessão é tratada como bloqueada.
+*Motivo:* na dúvida, exigir "Ignis Arise" é o lado seguro do erro. Só mouse e teclado contam como uso: jogando com controle, o PC entra em repouso depois de 5 minutos.
+
+**D55 · 2026-11-25 · Testes com o modelo real só onde ele foi baixado**
+No CI, os testes usam detectores e estados falsos. Os testes que carregam o modelo real são pulados quando ele não está baixado.
+*Motivo:* evita baixar 17 MB a cada execução do CI e guardar áudios de teste no repositório.

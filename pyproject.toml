@@ -27,6 +27,9 @@ line-length = 88
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "B", "PLC2401", "PLC2403"]
+# N818 pede o sufixo "Error" nas exceções, que não combina com nomes em
+# português (D01), como ErroDeModelo.
+ignore = ["N818"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["ignis_*"]
