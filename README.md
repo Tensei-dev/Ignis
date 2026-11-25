@@ -26,7 +26,7 @@ Assistente pessoal por voz que roda em casa. Ele ouve, decide e age nos meus apa
 
 | Recurso | Descrição | Versão |
 | --- | --- | --- |
-| 🎙️ Conversa por voz | No PC e no celular Android, ativado por "Arise Ignis" | v0 / v3 |
+| 🎙️ Conversa por voz | No PC e no celular Android, ativado por "Ignis Arise" | v0 / v3 |
 | 🛒 Lista de mercado | Adiciona e remove itens por voz e diz o que está faltando com mais urgência | v0 |
 | 💸 Contas a pagar | Lembra antes do vencimento e no dia | v0 |
 | 💡 Casa conectada | Controla a lâmpada e avisa quando a ração dos gatos está baixa | v1 |
@@ -40,7 +40,7 @@ Assistente pessoal por voz que roda em casa. Ele ouve, decide e age nos meus apa
 
 Um comando passa por estas etapas:
 
-1. **Ativação:** o cliente detecta "Arise Ignis" no próprio aparelho e só então envia o áudio ao cérebro. No PC, quem detecta é o openWakeWord.
+1. **Ativação:** o cliente detecta "Ignis Arise" no próprio aparelho e só então envia o áudio ao cérebro. No PC, quem detecta é o sherpa-onnx.
 2. **Ouvir:** o faster-whisper transcreve a fala.
 3. **Decidir:** o agente LLM interpreta o pedido e escolhe uma ferramenta da lista permitida.
 4. **Confirmar:** se a ação for sensível, o Ignis pede confirmação por voz antes de seguir.
@@ -50,10 +50,10 @@ Um comando passa por estas etapas:
 Exemplos:
 
 ```text
-"Arise Ignis, coloca leite e café na lista."
-"Arise Ignis, quais contas vencem esta semana?"
-"Arise Ignis, apaga a luz da sala."
-"Arise Ignis, me acorda às 6 e meia."
+"Ignis Arise, coloca leite e café na lista."
+"Ignis Arise, quais contas vencem esta semana?"
+"Ignis Arise, apaga a luz da sala."
+"Ignis Arise, me acorda às 6 e meia."
 ```
 
 ## Arquitetura
@@ -91,7 +91,7 @@ flowchart TD
 
 | Camada | Tecnologias |
 | --- | --- |
-| Voz | faster-whisper, openWakeWord, Kokoro TTS |
+| Voz | faster-whisper, sherpa-onnx, Kokoro TTS |
 | Agente | Python, MCP, API do Claude (v0), LLM local (v2) |
 | Dados | PostgreSQL |
 | Casa | Home Assistant (integração Tuya), MQTT (Mosquitto), ESP32 |

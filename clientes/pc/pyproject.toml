@@ -1,0 +1,19 @@
+[project]
+name = "ignis-pc"
+version = "0.1.0"
+description = "Cliente de voz do Ignis para o PC"
+license = "GPL-3.0-or-later"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.5.5",
+    "sherpa-onnx>=2.0.3",
+    "sounddevice>=0.5.6",
+]
+
+[project.scripts]
+ignis-pc = "ignis_pc:main"
+
+[build-system]
+requires = ["uv_build>=0.13.9,<0.14.0"]
+build-backend = "uv_build"

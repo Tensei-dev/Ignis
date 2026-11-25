@@ -14,7 +14,7 @@ O orquestrador do Ignis. Recebe a fala dos [clientes](../clientes/), decide o qu
 ## O que não mora aqui
 
 - **Captura e reprodução de áudio.** Microfone e caixa de som são dos clientes.
-- **Detecção da palavra de ativação.** O cliente detecta "Arise Ignis" e só então envia o áudio.
+- **Detecção da palavra de ativação.** O cliente detecta "Ignis Arise" e só então envia o áudio.
 - **Código de integrações.** Agenda, Spotify, casa e as demais ficam em servidores MCP.
 
 ## Regras

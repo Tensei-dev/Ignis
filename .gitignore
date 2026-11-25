@@ -35,3 +35,7 @@ logs/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# --- Modelos e arquivos gerados ---
+modelos/
+dev-req.txt
