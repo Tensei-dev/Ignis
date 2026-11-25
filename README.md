@@ -1,9 +1,9 @@
 # Jarvis
 
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-orange)
-![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+![Python](https://img.shields.io/badge/python-3.12%2B-blue)
 ![MCP](https://img.shields.io/badge/protocolo-MCP-6f42c1)
-![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-green)
+![Licença](https://img.shields.io/badge/licen%C3%A7a-GPLv3-green)
 
 Assistente pessoal por voz que roda em casa. Ele ouve, decide e age nos meus aparelhos e serviços, com foco em **baixa latência**, **privacidade** e **segurança**.
 
@@ -145,4 +145,6 @@ As decisões tomadas até aqui estão em [`docs/decisoes.md`](docs/decisoes.md).
 
 ## Licença
 
-Distribuído sob a licença MIT.
+Copyright (C) 2026 Tensei-dev
+
+Distribuído sob a [GNU General Public License, versão 3](LICENSE) ou, a seu critério, qualquer versão posterior. As bibliotecas e os modelos usados pelo projeto mantêm as próprias licenças.

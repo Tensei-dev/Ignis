@@ -1,5 +1,6 @@
 [project]
 name = "jarvis-cerebro"
+license = "GPL-3.0-or-later"
 version = "0.1.0"
 description = "Orquestrador do Jarvis"
 readme = "README.md"
