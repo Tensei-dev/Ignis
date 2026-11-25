@@ -40,7 +40,7 @@ Assistente pessoal por voz que roda em casa. Ele ouve, decide e age nos meus apa
 
 Um comando passa por estas etapas:
 
-1. **Ativação:** o openWakeWord detecta "hey Jarvis" localmente, sem mandar áudio para fora.
+1. **Ativação:** o cliente detecta "hey Jarvis" no próprio aparelho e só então envia o áudio ao cérebro. No PC, quem detecta é o openWakeWord.
 2. **Ouvir:** o faster-whisper transcreve a fala.
 3. **Decidir:** o agente LLM interpreta o pedido e escolhe uma ferramenta da lista permitida.
 4. **Confirmar:** se a ação for sensível, o Jarvis pede confirmação por voz antes de seguir.
@@ -112,9 +112,9 @@ flowchart TD
 
 ```text
 jarvis/
-├── cerebro/          # Orquestrador: palavra de ativação, STT, agente e TTS
+├── cerebro/          # Orquestrador: STT, agente e TTS
 ├── mcp/              # Um servidor MCP por integração, cada um como pacote próprio
-├── clientes/         # Pontos de voz que conversam com o cérebro (PC e Android)
+├── clientes/         # Pontos de voz (PC e Android): palavra de ativação e áudio
 └── docs/             # Documentação, registro de decisões e ADRs
 ```
 

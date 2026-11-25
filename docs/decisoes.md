@@ -32,6 +32,10 @@ O cliente do PC (microfone e caixa de som) é um processo separado do cérebro d
 Cada pasta principal tem um README curto explicando o que mora ali. Mais tarde, a documentação do projeto vai ser publicada no GitHub Pages.
 *Motivo:* quem cai numa pasta pelo GitHub entende o contexto na hora. O site reúne tudo num lugar só.
 
+**D17 · 2026-11-24 · Palavra de ativação detectada no cliente**
+Cada cliente detecta "hey Jarvis" no próprio aparelho e só envia áudio ao cérebro depois da ativação. O cérebro não recebe áudio contínuo.
+*Motivo:* com o cliente separado do cérebro (D05), detectar no cérebro exigiria transmitir o microfone o tempo todo. No cliente, há mais privacidade e menos uso de rede. A contrapartida é que cada cliente precisa da própria detecção: o openWakeWord passa a ser dependência do cliente do PC, e o app Android (v3) vai precisar de uma solução própria.
+
 ### T02: Ambiente Python com uv, ruff, pytest e pre-commit
 
 **D07 · 2026-11-23 · Python 3.12**

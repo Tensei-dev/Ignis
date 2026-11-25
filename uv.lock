@@ -2,6 +2,12 @@ version = 1
 revision = 5
 requires-python = ">=3.12"
 
+[manifest]
+members = [
+    "jarvis",
+    "jarvis-cerebro",
+]
+
 [[package]]
 name = "cfgv"
 version = "3.5.0"
@@ -76,6 +82,11 @@ dev = [
     { name = "pytest", specifier = ">=9.2.0" },
     { name = "ruff", specifier = ">=0.17.6" },
 ]
+
+[[package]]
+name = "jarvis-cerebro"
+version = "0.1.0"
+source = { editable = "cerebro" }
 
 [[package]]
 name = "nodeenv"
