@@ -207,7 +207,7 @@ A T06 passa a ser captura contínua do microfone, sem tecla. Continua valendo qu
 
 **D42 · 2026-11-25 · Como funciona a captura contínua**
 - O cliente do PC mora em `clientes/pc/`, no pacote `ignis_pc`.
-- A captura usa `sounddevice`, em 16 kHz, mono e 16 bits.
+- A captura usa `sounddevice`, em 16 kHz e mono. Na memória, o áudio fica em float32, o formato do sherpa-onnx e do Whisper; os 16 bits valem para o envio ao cérebro.
 - O microfone é escolhido pelo nome, com o padrão do Windows como reserva.
 - Antes da ativação, só os últimos 2 s ficam na memória, descartados continuamente.
 - A fala termina com 0,8 s de silêncio, valor inicial e configurável, com limite de 30 s.
@@ -238,3 +238,23 @@ A frase passa de "Arise Ignis" (D40) para "Ignis Arise".
 **D47 · 2026-11-25 · Detecção da frase em duas etapas, com sensibilidade média e iscas**
 O cliente detecta "Ignis Arise" com o sherpa-onnx na sensibilidade média (limiar 0,1 e peso 2,0), configurável. Frases parecidas entram como iscas, para competir com a frase certa: "Igris Arise", "Iris Arise", "Ingrid Arise", "Enemies Arise" e "Agnes Arise". O cérebro confirma a ativação: a voz precisa ser a cadastrada e a transcrição precisa começar com "Ignis". As variações aceitas da transcrição são medidas na T07. Variações de pronúncia da frase ficam de fora por enquanto.
 *Motivo:* no teste com a voz do autor e um headset, a sensibilidade média reconheceu 8 de 10 "Ignis Arise" e ativou 2 vezes em 10 "Igris Arise". As iscas não impediram essa confusão. A confirmação no cérebro reaproveita a transcrição que já é feita, sem custo extra. O teste deve ser refeito quando o headset for trocado.
+
+**D48 · 2026-11-25 · "Ignis Arise" para acordar, "Ignis" para chamar e conversa sem nome logo depois**
+- Com o PC bloqueado ou em repouso, a frase "Ignis Arise" acorda o Ignis.
+- Com o PC em uso, basta começar o pedido com "Ignis".
+- Logo depois de uma resposta, novos pedidos dispensam o nome por alguns segundos (D42).
+
+Só vai para a API o que foi dito para o Ignis: a regra da D34 sobre a palavra de ativação passa a valer para a frase e para o nome.
+*Motivo:* dizer a frase inteira a cada pedido cansa, e tratar toda fala como pedido mandaria conversas e chamadas para a API. "Ignis" sozinho confunde mais que a frase, mas a voz cadastrada e a confirmação no cérebro filtram (D45 e D47).
+
+**D49 · 2026-11-25 · Repouso após 5 minutos sem uso**
+O PC está em repouso depois de 5 minutos sem uso do mouse e do teclado. O valor é configurável. A suspensão do Windows não conta como repouso, porque nela o Ignis também para.
+*Motivo:* escolha do autor.
+
+**D50 · 2026-11-25 · Desbloqueio do Windows pela voz numa história futura**
+Desbloquear o Windows com "Ignis Arise" é um objetivo, mas fica para uma história própria, com análise de riscos e um segundo fator.
+*Motivo:* um programa comum não consegue desbloquear a tela de bloqueio: é preciso um *credential provider*, componente carregado pelo login do Windows. E a voz é fraca como senha, porque uma gravação poderia abrir a sessão inteira. Até lá, o desbloqueio fica com o Windows Hello.
+
+**D51 · 2026-11-25 · Ignis em segundo plano, com interface própria**
+O cliente do PC roda em segundo plano: inicia com o Windows, tem um ícone na bandeja, só permite uma instância e grava os logs em arquivo. O Ignis terá uma interface visual própria e interativa, desenhada numa história futura, assim como a escolha da tecnologia. O Ignis é um agente que controla várias funções do PC, cada uma como ferramenta de um servidor MCP, com confirmação para ações sensíveis.
+*Motivo:* requisitos do produto definidos pelo autor.
