@@ -17,13 +17,14 @@ def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
     if argumentos.comando == "baixar-modelos":
-        from ignis_pc.modelos import DETECTOR_DE_FRASES, ErroDeModelo, baixar
+        from ignis_pc.modelos import TODOS, ErroDeModelo, baixar
 
-        try:
-            baixar(DETECTOR_DE_FRASES)
-        except (ErroDeModelo, OSError) as erro:
-            logging.error("%s", erro)
-            return 1
+        for modelo in TODOS:
+            try:
+                baixar(modelo)
+            except (ErroDeModelo, OSError) as erro:
+                logging.error("%s", erro)
+                return 1
     return 0
 
 

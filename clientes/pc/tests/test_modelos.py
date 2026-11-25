@@ -80,3 +80,28 @@ def test_pasta_padrao_fica_no_localappdata(monkeypatch, tmp_path):
     monkeypatch.delenv("IGNIS_MODELOS", raising=False)
     monkeypatch.setenv("LOCALAPPDATA", str(tmp_path))
     assert modelos.pasta_de_modelos() == tmp_path / "Ignis" / "modelos"
+
+
+def test_baixa_modelo_de_arquivo_unico(tmp_path):
+    conteudo = b"modelo de um arquivo so"
+
+    def abrir(url: str) -> io.BytesIO:
+        return io.BytesIO(conteudo)
+
+    unico = Modelo(
+        "unico",
+        "https://exemplo/vad.onnx",
+        hashlib.sha256(conteudo).hexdigest(),
+        ("vad.onnx",),
+        compactado=False,
+    )
+    destino = baixar(unico, tmp_path, abrir=abrir)
+    assert [p.name for p in destino.iterdir()] == ["vad.onnx"]
+    assert (destino / "vad.onnx").read_bytes() == conteudo
+
+
+def test_os_modelos_do_cliente_estao_listados():
+    assert {m.nome for m in modelos.TODOS} == {
+        "kws-zipformer-gigaspeech-3.3M",
+        "silero-vad",
+    }

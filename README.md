@@ -88,7 +88,7 @@ flowchart TD
 - **Confirma o que importa.** Ações sensíveis pedem confirmação por voz.
 - **Privacidade por padrão.** A palavra de ativação e a transcrição são locais, e o áudio não sai de casa. Na v0, o texto de cada pedido vai para a API do Claude. Nada fica exposto direto na internet: o acesso externo é só por VPN.
 - **Guiado por avaliação.** Uma suíte de comandos com as ações esperadas roda no CI a cada mudança.
-- **Latência como meta.** Objetivo: menos de 1 s entre o fim da fala e o início da resposta.
+- **Latência como meta.** Objetivo: menos de 1 s entre o momento em que o Ignis percebe que você parou de falar e o início da resposta. Perceber o fim leva mais 0,8 s de silêncio.
 
 ## Stack
 

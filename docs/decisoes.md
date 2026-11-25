@@ -274,3 +274,15 @@ O módulo `sessao.py` lê o bloqueio com `WTSQuerySessionInformationW` e o tempo
 **D55 · 2026-11-25 · Testes com o modelo real só onde ele foi baixado**
 No CI, os testes usam detectores e estados falsos. Os testes que carregam o modelo real são pulados quando ele não está baixado.
 *Motivo:* evita baixar 17 MB a cada execução do CI e guardar áudios de teste no repositório.
+
+**D56 · 2026-11-25 · Silero VAD para saber se há fala**
+O cliente usa o Silero VAD pelo sherpa-onnx, com limiar 0,5. O modelo, de 0,6 MB e licença MIT, é baixado pelo mesmo `ignis-pc baixar-modelos` e conferido pelo SHA-256.
+*Motivo:* o sherpa-onnx já faz parte do cliente, e o detector custa cerca de 0,5% de um núcleo durante um pedido.
+
+**D57 · 2026-11-25 · Fim do pedido pelo primeiro trecho de fala depois do chamado**
+O detector de voz é reiniciado no chamado e só funciona durante o pedido. O pedido termina no primeiro trecho de fala concluído depois disso, ou seja, após 0,8 s de silêncio (D42). Se ninguém falar em 3 s, o resultado é "chamou sem pedir". O limite é de 30 s.
+*Motivo:* reiniciar no chamado faz a fala do próprio nome não contar, então uma pausa para pensar depois de "Ignis" não encerra o pedido. Fora de um pedido, o detector não gasta CPU, e o contador de amostras do sherpa-onnx, de 32 bits, que estouraria em cerca de 37 h de áudio contínuo, é zerado a cada pedido. Limitações medidas com voz sintética: uma pausa de 1 s no meio do pedido o encerra, e o começo brusco de um ruído pode parecer fala e encerrá-lo antes da hora.
+
+**D58 · 2026-11-25 · Meta de latência contada a partir da percepção do fim da fala**
+A meta de menos de 1 s passa a ser contada do momento em que o Ignis percebe o fim da fala até o início da resposta. Antes disso, há o tempo para perceber o fim: os 0,8 s de silêncio da D42.
+*Motivo:* com voz sintética, só perceber o fim levou de 0,9 a 1,0 s. A meta antiga, contada do fim real da fala, não seria alcançável com 0,8 s de silêncio.
