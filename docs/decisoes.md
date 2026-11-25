@@ -147,3 +147,42 @@ O cérebro, os servidores MCP e o cliente rodam no PC. O Raspberry Pi é reavali
 **D31 · 2026-11-24 · LLM local com vLLM desde a v0**
 O LLM roda na GPU do PC com vLLM desde a v0, e não só na v2.
 *Motivo:* escolha do autor. A contrapartida é que o vLLM não roda direto no Windows e exige o WSL, e que os 8 GB de VRAM são divididos com a transcrição e com jogos.
+
+**D32 · 2026-11-24 · API do Claude na v0, no lugar do vLLM**
+Substitui a D31. Na v0, o cérebro usa a API do Claude, com o SDK oficial, e o LLM local volta para a v2. Só um módulo conhece o Claude: o resto do cérebro usa uma interface própria. O agente e o controle das ferramentas ficam no cérebro.
+*Motivo:* o vLLM não roda direto no Windows e disputaria os 8 GB de VRAM com jogos. A contrapartida é o custo por uso, a dependência da internet e o envio do texto das conversas a um serviço externo.
+
+**D33 · 2026-11-24 · Claude Haiku 5.5 como modelo inicial**
+O modelo da v0 é o `claude-haiku-5-5`. Se ele errar a escolha das ferramentas, o próximo passo é testar o Sonnet ou o Opus.
+*Motivo:* os comandos da v0 são simples, e o Haiku é o modelo atual mais barato.
+
+**D34 · 2026-11-24 · Regras para o texto enviado à API do Claude**
+O texto das conversas pode ser enviado à API do Claude na v0, com estas regras:
+- o áudio não sai de casa, e a transcrição é local;
+- nada é enviado antes da palavra de ativação;
+- o cérebro envia só o necessário para cada pedido, e não o histórico inteiro;
+- segredos e senhas nunca entram no texto;
+- e-mails e agenda só são enviados depois de uma nova decisão, na v3.
+
+*Motivo:* pela política consultada em 2026-11-24, a Anthropic não treina modelos com o conteúdo da API por padrão e o apaga em até 30 dias, com exceções, como conteúdo sinalizado por segurança (até 2 anos). As regras reduzem o que sai de casa.
+
+### T05: Segredos em `.env` com `.env.example`
+
+**D35 · 2026-11-24 · Um `.env` por processo, com `.env.example` versionado**
+Cada programa tem o próprio `.env`, fora do git, e um `.env.example` só com os nomes, como em `cerebro/`.
+*Motivo:* cada processo tem acesso só às próprias chaves, como prevê o [ADR 0002](adr/0002-um-servidor-mcp-por-integracao.md).
+
+**D36 · 2026-11-24 · Leitura de segredos com `pydantic-settings`**
+O código lê o `.env` com `pydantic-settings` e guarda as chaves como `SecretStr`. Entra com o primeiro código do cérebro.
+*Motivo:* o programa falha logo ao iniciar se faltar uma chave, e a chave não aparece por engano em logs e mensagens.
+
+**D37 · 2026-11-24 · Detecção de segredos em três camadas**
+- No commit, o hook do gitleaks verifica o que está no stage.
+- No CI, o job `lint` varre todo o histórico com o gitleaks.
+- No GitHub, ficam ativos o Secret scanning e o Push protection.
+
+*Motivo:* o hook do commit só olha o stage e pode ser pulado com `--no-verify`. Num teste, ele não acusou uma chave já commitada, e a varredura do histórico acusou.
+
+**D38 · 2026-11-24 · Chave única do Jarvis, com limite de gasto, e revogação imediata se vazar**
+O Jarvis usa uma chave de API só dele, com limite de gasto no Console. Se uma chave vazar, o primeiro passo é revogá-la, e só depois limpar o repositório.
+*Motivo:* o repositório é público, e apagar a chave num commit seguinte não a remove do histórico.
