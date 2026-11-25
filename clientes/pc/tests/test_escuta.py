@@ -165,3 +165,16 @@ def test_ignis_arise_promovido_recomeca_o_acompanhamento():
     assert pedido.gatilho is Gatilho.FRASE
     assert indice == 20
     assert fim.esperas[:2] == [None, None]
+
+
+def test_wav_de_depuracao_leva_a_origem_no_nome(tmp_path):
+    from ignis_pc.terminal import origem_do_pedido, salvar_wav
+
+    def pedido(gatilho):
+        return Pedido(np.zeros(1600, np.float32), gatilho, limite=False, atraso=None)
+
+    assert origem_do_pedido(pedido(Gatilho.NOME)) == "nome"
+    assert origem_do_pedido(pedido(None)) == "conversa"
+    arquivo = salvar_wav(np.zeros(1600, np.float32), tmp_path, "conversa")
+    assert arquivo.stem.endswith("_conversa")
+    assert arquivo.exists()

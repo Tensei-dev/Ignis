@@ -2,10 +2,14 @@
 name = "ignis-cerebro"
 license = "GPL-3.0-or-later"
 version = "0.1.0"
-description = "Orquestrador do ignis"
+description = "Orquestrador do Ignis"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "faster-whisper>=1.2.1",
+    "numpy>=2.5.5",
+    "nvidia-ml-py>=13.615.71",
+]
 
 [project.scripts]
 ignis-cerebro = "ignis_cerebro:main"

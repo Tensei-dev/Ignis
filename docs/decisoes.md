@@ -298,3 +298,21 @@ Com o PC em uso, o detector do nome dispara no "Ignis" de "Ignis Arise". Se o de
 **D61 · 2026-11-25 · Comando `ignis-pc escutar`, com modo de depuração**
 O comando abre o microfone e mostra no terminal cada chamado, cada pedido e quanto o Ignis demorou para perceber o fim da fala. Com `--depurar`, cada pedido é salvo como WAV em `%LOCALAPPDATA%\Ignis\depuracao`, fora do git. Ainda não envia nada ao cérebro.
 *Motivo:* testar a escuta com o microfone real antes da T09, e juntar gravações reais para testar a transcrição na T07. Os WAVs guardam a voz em disco, por isso o modo vem desligado.
+
+### T07: Transcrição com faster-whisper em PT-BR, medindo o tempo
+
+**D62 · 2026-11-25 · Whisper large-v3-turbo compactado, na GPU, com a dica "Ignis"**
+O cérebro transcreve com o faster-whisper e o modelo large-v3-turbo em `int8_float16`, na GPU: português, a dica "Ignis", sem histórico entre pedidos e sem o filtro de voz do Whisper. O modelo é aquecido ao carregar. Ele vem do repositório `dropbox-dash/faster-whisper-large-v3-turbo` (licença MIT), fixado num commit, e cada arquivo é conferido pelo SHA-256. O comando `ignis-cerebro baixar-modelos` o guarda em `%LOCALAPPDATA%\Ignis\modelos`.
+*Motivo:* com voz sintética, levou cerca de 220 ms por pedido e 1,1 GB de memória de vídeo. Sem a dica, escreveu "Igness" e "Ignace" no lugar de "Ignis"; com ela, sempre "Ignis". O modelo small apagou o nome do texto, e na CPU o turbo levou 8,5 s. A primeira transcrição leva quase 1 s, por isso o aquecimento.
+
+**D63 · 2026-11-25 · Sem GPU livre, o Ignis avisa e não transcreve**
+O cérebro não usa a CPU como reserva. Um monitor lê a GPU a cada 0,5 s e a considera ocupada quando o uso médio dos últimos 5 s passa de 60% ou quando sobram menos de 300 MB de memória de vídeo. Nesses casos, o cérebro avisa e não transcreve, para não disputar com um jogo. As leituras feitas enquanto o próprio Ignis transcreve são descartadas. O comando `ignis-cerebro gpu` mostra o uso para calibrar o limite.
+*Motivo:* escolha do autor. Na CPU, o modelo pequeno apaga o nome do texto, o que impediria a conferência do chamado (D64), e o turbo é lento demais. O Windows não informa o uso da GPU por programa, por isso o uso total é medido e o do Ignis é descontado. O modelo continua ocupando 1,1 GB de memória de vídeo enquanto o cérebro está aberto, mesmo durante um jogo.
+
+**D64 · 2026-11-25 · Conferência do chamado pelo texto**
+Nos pedidos que começaram com um chamado, o cérebro procura "Ignis" (ou as variantes "Igness", "Ignes" e "Ignace") nas 4 primeiras palavras da transcrição, descarta o que vem antes e remove o "Arise", se houver. Se o nome não aparecer, o pedido é descartado e nada vai para a API. Pedidos feitos na conversa (D48) não passam pela conferência. Nos WAVs do modo de depuração, o nome do arquivo termina com a origem do pedido: `_frase`, `_nome` ou `_conversa`.
+*Motivo:* num teste de ponta a ponta, o cliente confundiu "igreja nova" com "Ignis", e a conferência barrou o pedido. O que vem antes do nome pode ser o fim de outra frase, porque o áudio inclui os 2 s anteriores ao chamado.
+
+**D65 · 2026-11-25 · Bibliotecas da NVIDIA num grupo `gpu`, fora do CI**
+As bibliotecas cuBLAS e cuDNN da NVIDIA ficam no grupo de dependências `gpu` da raiz, instalado por padrão pelo `uv sync`. O CI o desliga com `UV_NO_GROUP=gpu`, e os testes que precisam da GPU são pulados lá. O `pyproject.toml` da raiz declara os sistemas em que tudo precisa ser instalável: Windows x64 e Linux x64.
+*Motivo:* as bibliotecas passam de 1 GB e seriam baixadas a cada execução do CI. Sem declarar os sistemas, o uv escolheu uma versão do cuBLAS que só existe para Linux. Fica para a v1: no Linux (Raspberry Pi ou Docker), as bibliotecas da NVIDIA são encontradas de outro jeito.

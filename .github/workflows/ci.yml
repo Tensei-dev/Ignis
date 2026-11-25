@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+env:
+  # As bibliotecas da NVIDIA (grupo gpu) passam de 1 GB e não são usadas no CI.
+  UV_NO_GROUP: gpu
+
 jobs:
   lint:
     runs-on: ubuntu-latest
