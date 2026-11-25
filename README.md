@@ -75,7 +75,7 @@ flowchart TD
 ```
 
 - O **PC** fica ligado 24 h e coordena tudo. O uso de um Raspberry Pi será reavaliado na v1.
-- O **LLM roda na GPU do PC** com vLLM. Uma API externa de reserva, para quando a GPU estiver ocupada, está em avaliação.
+- Na v0, o **LLM é o Claude Haiku 5.5, pela API**. O LLM local entra na v2.
 - **Cada integração é um servidor MCP separado**, então trocar um serviço ou o modelo não mexe no resto.
 
 ## Princípios
@@ -83,7 +83,7 @@ flowchart TD
 - **Age só por ações validadas.** O agente tem uma lista fechada de ferramentas e nunca executa nada fora dela.
 - **Conteúdo lido não dá ordens.** E-mails, posts e feeds são processados sem acesso às ferramentas de ação, como proteção contra prompt injection.
 - **Confirma o que importa.** Ações sensíveis pedem confirmação por voz.
-- **Privacidade por padrão.** A palavra de ativação é detectada localmente, e nada fica exposto direto na internet: o acesso externo é só por VPN.
+- **Privacidade por padrão.** A palavra de ativação e a transcrição são locais, e o áudio não sai de casa. Na v0, o texto de cada pedido vai para a API do Claude. Nada fica exposto direto na internet: o acesso externo é só por VPN.
 - **Guiado por avaliação.** Uma suíte de comandos com as ações esperadas roda no CI a cada mudança.
 - **Latência como meta.** Objetivo: menos de 1 s entre o fim da fala e o início da resposta.
 
@@ -92,7 +92,7 @@ flowchart TD
 | Camada | Tecnologias |
 | --- | --- |
 | Voz | faster-whisper, openWakeWord, Kokoro TTS |
-| Agente | Python, MCP, vLLM (modelo aberto quantizado) |
+| Agente | Python, MCP, API do Claude (v0), LLM local (v2) |
 | Dados | PostgreSQL |
 | Casa | Home Assistant (integração Tuya), MQTT (Mosquitto), ESP32 |
 | Infra | Docker, Tailscale, GitHub Actions |
@@ -102,7 +102,7 @@ flowchart TD
 
 | Peça | Papel |
 | --- | --- |
-| PC com GPU NVIDIA (RTX 4060, 8 GB) | Central ligada 24 h: cérebro, LLM local com vLLM, servidores MCP, PostgreSQL, microfone e caixa de som |
+| PC com GPU NVIDIA (RTX 4060, 8 GB) | Central ligada 24 h: cérebro, servidores MCP, PostgreSQL, microfone e caixa de som |
 | Raspberry Pi 5 | Em avaliação para a v1 |
 | Celular Android | Segundo ponto de voz e destino dos alarmes |
 | Lâmpada e alimentador Tuya | Aparelhos da casa controlados pelo Home Assistant |
@@ -133,9 +133,9 @@ As decisões tomadas até aqui estão em [`docs/decisoes.md`](docs/decisoes.md),
 
 ## Roadmap
 
-- [ ] **v0: Jarvis no PC.** Voz, LLM local na GPU, ferramentas, lista de mercado e contas
+- [ ] **v0: Jarvis no PC.** Voz, agente com a API do Claude, ferramentas, lista de mercado e contas
 - [ ] **v1: Casa conectada.** Home Assistant, lâmpada, alimentador e reavaliação do Raspberry Pi
-- [ ] **v2: Cérebro próprio.** Avaliação, segurança e latência abaixo de 1 s
+- [ ] **v2: Cérebro próprio.** LLM local na GPU, avaliação, segurança e latência abaixo de 1 s
 - [ ] **v3: Assistente completo.** App Android, despertador, agenda, Spotify e resumo da manhã
 - [ ] **v4: Plataforma de comandos.** MQTT e nós ESP32
 
