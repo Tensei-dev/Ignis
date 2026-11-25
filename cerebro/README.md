@@ -25,6 +25,6 @@ O orquestrador do Jarvis. Recebe a fala dos [clientes](../clientes/), decide o q
 
 ## Onde roda
 
-Na v0, no PC. A partir da v1, no Raspberry Pi. O cliente do PC é um processo separado desde a v0, para essa mudança não exigir reescrita.
+No PC. O uso de um Raspberry Pi será reavaliado na v1. O cliente do PC é um processo separado desde a v0, para o cérebro poder mudar de máquina sem reescrita.
 
-Os motivos estão no [registro de decisões](../docs/decisoes.md).
+Os motivos estão no [registro de decisões](../docs/decisoes.md) e nos [ADRs](../docs/adr/).

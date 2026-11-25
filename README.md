@@ -62,7 +62,7 @@ Exemplos:
 flowchart TD
     PC[PC: microfone e caixa de som] --> Brain
     Phone[Celular Android] --> Brain
-    subgraph Brain[Cérebro: orquestrador no Raspberry Pi]
+    subgraph Brain[Cérebro: orquestrador no PC]
         STT[Ouvir: faster-whisper] --> Agent[Agente LLM]
         Agent --> TTS[Falar: Kokoro TTS]
     end
@@ -74,8 +74,8 @@ flowchart TD
     Agent -- MCP --> MQTT[MQTT: ESP32 e Arduino]
 ```
 
-- O **Raspberry Pi** fica ligado 24 h e coordena tudo.
-- O **LLM roda na GPU do PC** com vLLM. Uma API externa serve de reserva quando o PC está desligado.
+- O **PC** fica ligado 24 h e coordena tudo. O uso de um Raspberry Pi será reavaliado na v1.
+- O **LLM roda na GPU do PC** com vLLM. Uma API externa de reserva, para quando a GPU estiver ocupada, está em avaliação.
 - **Cada integração é um servidor MCP separado**, então trocar um serviço ou o modelo não mexe no resto.
 
 ## Princípios
@@ -95,15 +95,15 @@ flowchart TD
 | Agente | Python, MCP, vLLM (modelo aberto quantizado) |
 | Dados | PostgreSQL |
 | Casa | Home Assistant (integração Tuya), MQTT (Mosquitto), ESP32 |
-| Infra | Raspberry Pi 5, Docker, Tailscale, GitHub Actions |
+| Infra | Docker, Tailscale, GitHub Actions |
 | Integrações | Google Agenda, Spotify Web API, Gmail API (só leitura), RSS |
 
 ## Hardware
 
 | Peça | Papel |
 | --- | --- |
-| Raspberry Pi 5 | Orquestrador ligado 24 h, servidores MCP, PostgreSQL e Home Assistant |
-| PC com GPU NVIDIA | Roda o LLM local com vLLM, além do microfone e da caixa de som |
+| PC com GPU NVIDIA (RTX 4060, 8 GB) | Central ligada 24 h: cérebro, LLM local com vLLM, servidores MCP, PostgreSQL, microfone e caixa de som |
+| Raspberry Pi 5 | Em avaliação para a v1 |
 | Celular Android | Segundo ponto de voz e destino dos alarmes |
 | Lâmpada e alimentador Tuya | Aparelhos da casa controlados pelo Home Assistant |
 | ESP32 / Arduino | Aparelhos próprios conectados via MQTT |
@@ -127,15 +127,15 @@ Convenções:
 - O código segue a PEP 8.
 - A pasta `mcp/` não tem `__init__.py`. Cada servidor usa o layout `src/` para não conflitar com o SDK `mcp`.
 
-O cliente do PC é um processo separado do cérebro desde a v0. Na v1, o cérebro muda para o Raspberry Pi sem precisar ser reescrito.
+O cliente do PC é um processo separado do cérebro desde a v0. Assim, o cérebro pode mudar de máquina sem precisar ser reescrito.
 
-As decisões tomadas até aqui estão em [`docs/decisoes.md`](docs/decisoes.md).
+As decisões tomadas até aqui estão em [`docs/decisoes.md`](docs/decisoes.md), e as de arquitetura, em [`docs/adr/`](docs/adr/).
 
 ## Roadmap
 
-- [ ] **v0: Jarvis no PC.** Voz, ferramentas, lista de mercado e contas
-- [ ] **v1: Casa conectada.** Raspberry Pi, Home Assistant, lâmpada e alimentador
-- [ ] **v2: Cérebro próprio.** LLM local na GPU, avaliação, segurança e latência abaixo de 1 s
+- [ ] **v0: Jarvis no PC.** Voz, LLM local na GPU, ferramentas, lista de mercado e contas
+- [ ] **v1: Casa conectada.** Home Assistant, lâmpada, alimentador e reavaliação do Raspberry Pi
+- [ ] **v2: Cérebro próprio.** Avaliação, segurança e latência abaixo de 1 s
 - [ ] **v3: Assistente completo.** App Android, despertador, agenda, Spotify e resumo da manhã
 - [ ] **v4: Plataforma de comandos.** MQTT e nós ESP32
 

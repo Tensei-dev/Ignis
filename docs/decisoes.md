@@ -129,3 +129,21 @@ Os commits existentes vão para o repositório público como estão, com a ident
 **D27 · 2026-11-24 · Licença GPL-3.0-or-later**
 O código do Jarvis é distribuído sob a GPL, versão 3 ou posterior, no lugar da MIT prevista no início. O texto completo fica no arquivo `LICENSE`, na raiz.
 *Motivo:* quem distribuir uma versão modificada precisa abrir o código também. A contrapartida é que o código não pode ser incorporado a um produto fechado distribuído a terceiros. Bibliotecas e modelos mantêm as próprias licenças.
+
+### T04: Registrar decisões de arquitetura (ADR)
+
+**D28 · 2026-11-24 · ADRs em `docs/adr/`, no formato de Nygard**
+Cada decisão de arquitetura ganha um arquivo numerado com contexto, decisão e consequências. Um ADR aceito não é reescrito: se a decisão mudar, outro o substitui. Os primeiros tratam do [PC como central](adr/0001-pc-como-central.md) (0001), de [um servidor MCP por integração](adr/0002-um-servidor-mcp-por-integracao.md) (0002) e do [cliente separado do cérebro](adr/0003-cliente-separado-do-cerebro.md) (0003).
+*Motivo:* preservar o raciocínio das decisões que custam caro para desfazer.
+
+**D29 · 2026-11-24 · Começar só pelo PC, ligado 24 h**
+As primeiras implementações são todas no computador, que fica ligado 24 h. O smartphone fica para depois. O PC tem uma RTX 4060 com 8 GB de VRAM.
+*Motivo:* escolha do autor para a fase inicial. Com o PC sempre ligado, o processamento pesado pode contar com a GPU.
+
+**D30 · 2026-11-24 · PC como central, Pi reavaliado na v1**
+O cérebro, os servidores MCP e o cliente rodam no PC. O Raspberry Pi é reavaliado na v1, com medições. O raciocínio está no [ADR 0001](adr/0001-pc-como-central.md). Onde as decisões anteriores dizem que o cérebro vai para o Pi na v1 (D05, D22), passa a valer esta.
+*Motivo:* com o PC ligado 24 h, o motivo principal para começar pelo Pi enfraqueceu.
+
+**D31 · 2026-11-24 · LLM local com vLLM desde a v0**
+O LLM roda na GPU do PC com vLLM desde a v0, e não só na v2.
+*Motivo:* escolha do autor. A contrapartida é que o vLLM não roda direto no Windows e exige o WSL, e que os 8 GB de VRAM são divididos com a transcrição e com jogos.
