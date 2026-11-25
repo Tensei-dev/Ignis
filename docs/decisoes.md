@@ -2,6 +2,8 @@
 
 Log das decisões tomadas em cada tarefa, da mais antiga para a mais recente. As decisões de arquitetura também ganham um ADR em [`docs/adr/`](adr/).
 
+O projeto se chamava Jarvis até 2026-11-25 (D39). As entradas e os ADRs anteriores mantêm o nome antigo.
+
 ## H01: Estrutura inicial do projeto
 
 ### T01: Criar repositório (core/, mcp/, clients/) com README
@@ -186,3 +188,17 @@ O código lê o `.env` com `pydantic-settings` e guarda as chaves como `SecretSt
 **D38 · 2026-11-24 · Chave única do Jarvis, com limite de gasto, e revogação imediata se vazar**
 O Jarvis usa uma chave de API só dele, com limite de gasto no Console. Se uma chave vazar, o primeiro passo é revogá-la, e só depois limpar o repositório.
 *Motivo:* o repositório é público, e apagar a chave num commit seguinte não a remove do histórico.
+
+## H02: Voz
+
+**D39 · 2026-11-25 · O projeto passa a se chamar Ignis**
+O nome muda no repositório, nos pacotes e na documentação. O prefixo importável da D09 passa de `jarvis_` para `ignis_`.
+*Motivo:* escolha do autor.
+
+**D40 · 2026-11-25 · Frase de ativação "Arise Ignis", com openWakeWord**
+A ativação por voz usa a frase em inglês "Arise Ignis", no lugar de "hey Jarvis", com um modelo próprio treinado para o openWakeWord. Os pedidos continuam em português.
+*Motivo:* os modelos prontos do openWakeWord são em inglês e não incluem essa frase. Uma frase em inglês evita treinar em português.
+
+**D41 · 2026-11-25 · Captura contínua no lugar do push-to-talk**
+A T06 passa a ser captura contínua do microfone, sem tecla. Continua valendo que nada é enviado antes da ativação (D17 e D34).
+*Motivo:* a história H02 pede uso sem teclado.

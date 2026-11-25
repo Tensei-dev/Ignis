@@ -1,6 +1,6 @@
 # clientes
 
-Os pontos de voz do Jarvis. Um cliente capta a fala, envia ao [cérebro](../cerebro/) e reproduz a resposta.
+Os pontos de voz do Ignis. Um cliente capta a fala, envia ao [cérebro](../cerebro/) e reproduz a resposta.
 
 > 🚧 Ainda sem código. O cliente do PC chega na v0.
 

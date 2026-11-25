@@ -1,6 +1,6 @@
 # cerebro
 
-O orquestrador do Jarvis. Recebe a fala dos [clientes](../clientes/), decide o que fazer, chama as ferramentas dos [servidores MCP](../mcp/) e devolve a resposta falada.
+O orquestrador do Ignis. Recebe a fala dos [clientes](../clientes/), decide o que fazer, chama as ferramentas dos [servidores MCP](../mcp/) e devolve a resposta falada.
 
 > 🚧 Ainda sem código. O cérebro começa na v0.
 
@@ -14,14 +14,14 @@ O orquestrador do Jarvis. Recebe a fala dos [clientes](../clientes/), decide o q
 ## O que não mora aqui
 
 - **Captura e reprodução de áudio.** Microfone e caixa de som são dos clientes.
-- **Detecção da palavra de ativação.** O cliente detecta "hey Jarvis" e só então envia o áudio.
+- **Detecção da palavra de ativação.** O cliente detecta "Arise Ignis" e só então envia o áudio.
 - **Código de integrações.** Agenda, Spotify, casa e as demais ficam em servidores MCP.
 
 ## Regras
 
 - O agente só usa ferramentas de uma lista fechada e nunca executa nada fora dela.
 - E-mails, posts e feeds são processados sem acesso às ferramentas de ação.
-- O pacote importável é `jarvis_cerebro`.
+- O pacote importável é `ignis_cerebro`.
 
 ## Onde roda
 
