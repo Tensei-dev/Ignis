@@ -88,9 +88,11 @@ class Ativador:
     - Em uso: a frase ou o nome ativam.
 
     Os dois detectores recebem todos os blocos, para estarem sempre em dia.
-    Depois de uma ativação, outras são ignoradas por um tempo: ao dizer
-    "Ignis Arise", o detector do nome dispara no "Ignis" e o da frase logo
-    depois, e isso não pode virar duas ativações.
+    Depois de uma ativação, outras são ignoradas por um tempo. A exceção é a
+    promoção: ao dizer "Ignis Arise" com o PC em uso, o detector do nome
+    dispara no "Ignis" e o da frase logo depois. Nesse caso, a frase é
+    devolvida de novo, para quem estiver ouvindo o pedido saber que o "Arise"
+    fazia parte do chamado.
     """
 
     def __init__(
@@ -107,6 +109,7 @@ class Ativador:
         self._repouso_apos = repouso_apos
         self._blocos_de_pausa = round(pausa_apos_ativar * TAXA / AMOSTRAS_POR_BLOCO)
         self._pausa_restante = 0
+        self._ultimo: Gatilho | None = None
 
     def em_uso(self) -> bool:
         if self._estado.bloqueado():
@@ -119,6 +122,9 @@ class Ativador:
 
         if self._pausa_restante > 0:
             self._pausa_restante -= 1
+            if ouviu_frase and self._ultimo is Gatilho.NOME:
+                self._ultimo = Gatilho.FRASE
+                return Gatilho.FRASE
             return None
 
         gatilho = None
@@ -129,6 +135,7 @@ class Ativador:
 
         if gatilho is not None:
             self._pausa_restante = self._blocos_de_pausa
+            self._ultimo = gatilho
         return gatilho
 
 
