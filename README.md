@@ -26,7 +26,9 @@ Assistente pessoal por voz que roda em casa. Ele ouve, decide e age nos meus apa
 
 | Recurso | Descrição | Versão |
 | --- | --- | --- |
-| 🎙️ Conversa por voz | No PC e no celular Android, ativado por "Ignis Arise" | v0 / v3 |
+| 🎙️ Conversa por voz | No PC e no celular Android. "Ignis Arise" acorda o Ignis com o PC bloqueado ou em repouso; em uso, basta chamá-lo de "Ignis" | v0 / v3 |
+| 🔐 Só a sua voz | Responde apenas à voz cadastrada | v0 |
+| 🖥️ Segundo plano | Inicia com o Windows, fica na bandeja e tem interface visual própria | futura |
 | 🛒 Lista de mercado | Adiciona e remove itens por voz e diz o que está faltando com mais urgência | v0 |
 | 💸 Contas a pagar | Lembra antes do vencimento e no dia | v0 |
 | 💡 Casa conectada | Controla a lâmpada e avisa quando a ração dos gatos está baixa | v1 |
@@ -40,8 +42,8 @@ Assistente pessoal por voz que roda em casa. Ele ouve, decide e age nos meus apa
 
 Um comando passa por estas etapas:
 
-1. **Ativação:** o cliente detecta "Ignis Arise" no próprio aparelho e só então envia o áudio ao cérebro. No PC, quem detecta é o sherpa-onnx.
-2. **Ouvir:** o faster-whisper transcreve a fala.
+1. **Ativação:** o cliente detecta "Ignis Arise", ou só "Ignis" com o PC em uso, no próprio aparelho, e só então envia o áudio ao cérebro. No PC, quem detecta é o sherpa-onnx.
+2. **Ouvir:** o cérebro confere se a voz é a cadastrada, e o faster-whisper transcreve a fala.
 3. **Decidir:** o agente LLM interpreta o pedido e escolhe uma ferramenta da lista permitida.
 4. **Confirmar:** se a ação for sensível, o Ignis pede confirmação por voz antes de seguir.
 5. **Agir:** a ferramenta é chamada no servidor MCP correspondente.
@@ -50,10 +52,11 @@ Um comando passa por estas etapas:
 Exemplos:
 
 ```text
-"Ignis Arise, coloca leite e café na lista."
-"Ignis Arise, quais contas vencem esta semana?"
-"Ignis Arise, apaga a luz da sala."
-"Ignis Arise, me acorda às 6 e meia."
+"Ignis Arise."                          (PC bloqueado ou em repouso)
+"Ignis, coloca leite e café na lista."
+"Ignis, quais contas vencem esta semana?"
+"Ignis, apaga a luz da sala."
+"Ignis, me acorda às 6 e meia."
 ```
 
 ## Arquitetura
@@ -138,6 +141,7 @@ As decisões tomadas até aqui estão em [`docs/decisoes.md`](docs/decisoes.md),
 - [ ] **v2: Cérebro próprio.** LLM local na GPU, avaliação, segurança e latência abaixo de 1 s
 - [ ] **v3: Assistente completo.** App Android, despertador, agenda, Spotify e resumo da manhã
 - [ ] **v4: Plataforma de comandos.** MQTT e nós ESP32
+- [ ] **Futuro:** interface visual própria e desbloqueio do Windows pela voz, com análise de riscos
 
 ## Como rodar
 
