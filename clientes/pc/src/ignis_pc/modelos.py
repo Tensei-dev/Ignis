@@ -29,6 +29,8 @@ class Modelo:
     url: str
     sha256: str
     arquivos: tuple[str, ...]
+    compactado: bool = True
+    """False quando a URL aponta direto para o único arquivo do modelo."""
 
 
 DETECTOR_DE_FRASES = Modelo(
@@ -46,6 +48,20 @@ DETECTOR_DE_FRASES = Modelo(
     ),
 )
 """Detector de frases do sherpa-onnx, licença Apache 2.0 segundo o autor."""
+
+DETECTOR_DE_VOZ = Modelo(
+    nome="silero-vad",
+    url=(
+        "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/"
+        "silero_vad.onnx"
+    ),
+    sha256="9e2449e1087496d8d4caba907f23e0bd3f78d91fa552479bb9c23ac09cbb1fd6",
+    arquivos=("silero_vad.onnx",),
+    compactado=False,
+)
+"""Silero VAD, que diz se há voz humana no áudio. Licença MIT."""
+
+TODOS = (DETECTOR_DE_FRASES, DETECTOR_DE_VOZ)
 
 
 def pasta_de_modelos() -> Path:
@@ -98,7 +114,10 @@ def baixar(
 
         extraidos = Path(temporaria) / "extraidos"
         extraidos.mkdir()
-        _extrair(pacote, modelo.arquivos, extraidos)
+        if modelo.compactado:
+            _extrair(pacote, modelo.arquivos, extraidos)
+        else:
+            pacote.rename(extraidos / modelo.arquivos[0])
 
         shutil.rmtree(destino, ignore_errors=True)
         extraidos.rename(destino)
