@@ -81,3 +81,51 @@ Todo arquivo de texto é guardado e extraído com LF (`\n`), por meio de um `.gi
 **D16 · 2026-11-23 · `.vscode/settings.json` versionado**
 As configurações do VS Code para o projeto ficam no git: LF, linha em branco no fim do arquivo, remoção de espaços no fim da linha e o ruff como formatador ao salvar. Nada específico de uma máquina entra no arquivo, como caminhos de interpretador.
 *Motivo:* quem clonar o projeto ganha o mesmo comportamento do editor, e os hooks do pre-commit quase nunca precisam corrigir nada.
+
+### T03: CI no GitHub Actions rodando lint e testes
+
+**D18 · 2026-11-24 · CI em pull requests e em pushes na `main`**
+O workflow roda em todo pull request e em todo push na `main`.
+*Motivo:* pegar problemas antes do merge e confirmar o estado da `main` depois dele.
+
+**D19 · 2026-11-24 · Dois jobs: `lint` e `testes`**
+O job `lint` roda `pre-commit run --all-files`. O job `testes` roda o pytest em todos os pacotes do workspace.
+*Motivo:* o `lint` repete os mesmos hooks do commit local, nas mesmas versões, sem duplicar a lista no workflow.
+
+**D20 · 2026-11-24 · Versão do uv fixada no `pyproject.toml`**
+A versão do uv fica em `[tool.uv] required-version`, no `pyproject.toml` da raiz.
+*Motivo:* a mesma regra vale para o ambiente local e para o CI, escrita em um lugar só.
+
+**D21 · 2026-11-24 · Testes isolados por pacote a partir do segundo pacote**
+Quando existir o segundo pacote do workspace, o CI passa a testar cada um num ambiente só com as dependências dele:
+
+```bash
+uv export --locked --only-group dev -o dev-req.txt
+uv run --isolated --locked --package <nome> --with-requirements dev-req.txt pytest <pasta>
+```
+
+*Motivo:* no ambiente completo, um pacote pode usar sem querer uma lib que só outro declarou, e o erro só apareceria no Docker. Com um pacote só, o teste isolado não acrescenta nada.
+
+**D22 · 2026-11-24 · Testes em Linux e Windows, lint só em Linux**
+O job `testes` roda nos dois sistemas, e o `lint` roda só em Linux. Os testes não dependem de microfone nem de caixa de som: usam áudio falso.
+*Motivo:* o cérebro vai rodar em Linux (Raspberry Pi e Docker) e o cliente do PC roda em Windows. O resultado do lint não deveria depender do sistema.
+
+**D23 · 2026-11-24 · `--locked` no CI**
+O CI usa `--locked` e falha se o `uv.lock` não corresponder aos `pyproject.toml`.
+*Motivo:* sem isso, o CI geraria um lock temporário e aprovaria versões diferentes das que estão no repositório.
+
+**D24 · 2026-11-24 · CI com permissão mínima e actions fixadas por SHA**
+O `GITHUB_TOKEN` do workflow tem só `contents: read`, e cada action é fixada pelo SHA do commit.
+*Motivo:* limitar o estrago se uma action ou dependência for comprometida. Uma tag pode ser movida para outro código, e um SHA não.
+
+**D25 · 2026-11-24 · Repositório público e `main` protegida**
+O repositório passa a ser público, e a `main` só recebe mudanças por pull request com o CI verde. Não é exigida a aprovação de outra pessoa.
+*Motivo:* sem bloqueio, o CI só avisa depois que o código já entrou. No plano gratuito do GitHub, a proteção de branch só existe em repositórios públicos. A contrapartida é que todo o histórico fica visível.
+
+**D26 · 2026-11-24 · Histórico publicado sem reescrita**
+Os commits existentes vão para o repositório público como estão, com a identidade de autor original.
+*Motivo:* escolha do autor. A verificação do histórico não encontrou segredos nos arquivos.
+
+**D27 · 2026-11-24 · Licença GPL-3.0-or-later**
+O código do Jarvis é distribuído sob a GPL, versão 3 ou posterior, no lugar da MIT prevista no início. O texto completo fica no arquivo `LICENSE`, na raiz.
+*Motivo:* quem distribuir uma versão modificada precisa abrir o código também. A contrapartida é que o código não pode ser incorporado a um produto fechado distribuído a terceiros. Bibliotecas e modelos mantêm as próprias licenças.
