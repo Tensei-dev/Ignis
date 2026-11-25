@@ -202,3 +202,39 @@ A ativação por voz usa a frase em inglês "Arise Ignis", no lugar de "hey Jarv
 **D41 · 2026-11-25 · Captura contínua no lugar do push-to-talk**
 A T06 passa a ser captura contínua do microfone, sem tecla. Continua valendo que nada é enviado antes da ativação (D17 e D34).
 *Motivo:* a história H02 pede uso sem teclado.
+
+### T06: Captura contínua do microfone
+
+**D42 · 2026-11-25 · Como funciona a captura contínua**
+- O cliente do PC mora em `clientes/pc/`, no pacote `ignis_pc`.
+- A captura usa `sounddevice`, em 16 kHz, mono e 16 bits.
+- O microfone é escolhido pelo nome, com o padrão do Windows como reserva.
+- Antes da ativação, só os últimos 2 s ficam na memória, descartados continuamente.
+- A fala termina com 0,8 s de silêncio, valor inicial e configurável, com limite de 30 s.
+- A escuta fica pausada enquanto o Ignis fala.
+- Depois da resposta, o Ignis ouve por mais 5 s sem exigir nova ativação.
+- O áudio nunca é gravado em disco, exceto em modo de depuração e fora do git.
+- Há um modo mudo, para chamadas e jogos.
+- Os testes usam áudio de arquivos e um microfone falso no CI.
+
+*Motivo:* manter o uso sem teclado com o mínimo de áudio guardado. Os 5 s depois da resposta deixam a conversa natural, mas permitem que outra pessoa fale, o que a verificação de voz deve fechar.
+
+**D43 · 2026-11-25 · sherpa-onnx para detectar a frase de ativação**
+Substitui o openWakeWord da D40. A frase continua "Arise Ignis".
+*Motivo:* o sherpa-onnx detecta a frase sem treino e usa a mesma versão no Windows e no Linux, e o modelo é Apache 2.0, segundo o autor. Num teste com voz sintética em inglês, acertou 6 de 6, sem falsos alarmes em 12 frases. Com uma voz em português lendo a frase, não acertou nenhuma, então a pronúncia precisa ser em inglês.
+
+**D44 · 2026-11-25 · Só a frase na voz cadastrada ativa, e as palmas são opcionais**
+As palmas deixam o Ignis atento, mas ele só responde à frase de ativação dita pela voz cadastrada, com ou sem palmas antes.
+*Motivo:* escolha do autor. Sons parecidos com palmas não bastam para o Ignis responder.
+
+**D45 · 2026-11-25 · Verificação de voz dentro da H02**
+O Ignis só atende quem tem a voz cadastrada. A verificação fica no cérebro, antes da transcrição, e entra na H02, e não numa história posterior.
+*Motivo:* escolha do autor. A verificação de voz não é uma senha: uma gravação pode enganá-la, então ações sensíveis continuam pedindo confirmação.
+
+**D46 · 2026-11-25 · Frase de ativação "Ignis Arise"**
+A frase passa de "Arise Ignis" (D40) para "Ignis Arise".
+*Motivo:* no teste com a voz do autor, "Ignis Arise" foi reconhecida bem mais vezes: 11, 18 e 17, contra 5, 5 e 7, nas sensibilidades baixa, média e alta. O número de tentativas não foi registrado.
+
+**D47 · 2026-11-25 · Detecção da frase em duas etapas, com sensibilidade média e iscas**
+O cliente detecta "Ignis Arise" com o sherpa-onnx na sensibilidade média (limiar 0,1 e peso 2,0), configurável. Frases parecidas entram como iscas, para competir com a frase certa: "Igris Arise", "Iris Arise", "Ingrid Arise", "Enemies Arise" e "Agnes Arise". O cérebro confirma a ativação: a voz precisa ser a cadastrada e a transcrição precisa começar com "Ignis". As variações aceitas da transcrição são medidas na T07. Variações de pronúncia da frase ficam de fora por enquanto.
+*Motivo:* no teste com a voz do autor e um headset, a sensibilidade média reconheceu 8 de 10 "Ignis Arise" e ativou 2 vezes em 10 "Igris Arise". As iscas não impediram essa confusão. A confirmação no cérebro reaproveita a transcrição que já é feita, sem custo extra. O teste deve ser refeito quando o headset for trocado.
