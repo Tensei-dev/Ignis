@@ -64,13 +64,18 @@ DETECTOR_DE_VOZ = Modelo(
 TODOS = (DETECTOR_DE_FRASES, DETECTOR_DE_VOZ)
 
 
+def pasta_do_ignis() -> Path:
+    """Onde o Ignis guarda os seus dados nesta máquina, fora do repositório."""
+    if local := os.environ.get("LOCALAPPDATA"):
+        return Path(local) / "Ignis"
+    return Path.home() / ".local" / "share" / "ignis"
+
+
 def pasta_de_modelos() -> Path:
     """Onde os modelos ficam. A variável IGNIS_MODELOS muda o lugar."""
     if escolhida := os.environ.get("IGNIS_MODELOS"):
         return Path(escolhida)
-    if local := os.environ.get("LOCALAPPDATA"):
-        return Path(local) / "Ignis" / "modelos"
-    return Path.home() / ".local" / "share" / "ignis" / "modelos"
+    return pasta_do_ignis() / "modelos"
 
 
 def caminho(modelo: Modelo, pasta: Path | None = None) -> Path:

@@ -71,10 +71,9 @@ def test_nome_nao_ativa_depois_de_5_minutos_sem_uso():
     assert rodar(montar(set(), {3}, EstadoFalso(sem_uso=300)), 10) == []
 
 
-def test_ignis_arise_com_o_pc_em_uso_ativa_uma_vez_so():
-    # O nome dispara no "Ignis" e a frase, 5 blocos depois, no "Arise".
-    ativador = montar({8}, {3}, EstadoFalso())
-    assert rodar(ativador, 30) == [(3, Gatilho.NOME)]
+def test_frase_seguida_do_nome_nao_ativa_duas_vezes():
+    ativador = montar({3}, {5}, EstadoFalso())
+    assert rodar(ativador, 30) == [(3, Gatilho.FRASE)]
 
 
 def test_volta_a_ativar_depois_da_pausa():
@@ -87,3 +86,14 @@ def test_os_dois_detectores_recebem_todos_os_blocos():
     frase, nome = DetectorRoteirizado({2}), DetectorRoteirizado(set())
     rodar(Ativador(frase, nome, EstadoFalso()), 10)
     assert frase.recebidos == nome.recebidos == 10
+
+
+def test_ignis_arise_com_o_pc_em_uso_promove_o_chamado_para_frase():
+    # O nome dispara no "Ignis" e a frase, 5 blocos depois, no "Arise".
+    ativador = montar({8}, {3}, EstadoFalso())
+    assert rodar(ativador, 30) == [(3, Gatilho.NOME), (8, Gatilho.FRASE)]
+
+
+def test_so_promove_uma_vez():
+    ativador = montar({8, 12}, {3}, EstadoFalso())
+    assert rodar(ativador, 30) == [(3, Gatilho.NOME), (8, Gatilho.FRASE)]

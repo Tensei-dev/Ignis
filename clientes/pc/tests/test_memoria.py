@@ -32,7 +32,7 @@ def test_so_o_modulo_microfone_importa_o_sounddevice():
 def test_modulos_sem_hardware_nao_importam_bibliotecas_pesadas():
     codigo = (
         "import sys, ignis_pc, ignis_pc.ativacao, ignis_pc.fim_da_fala,"
-        " ignis_pc.modelos, ignis_pc.memoria;"
+        " ignis_pc.escuta, ignis_pc.modelos, ignis_pc.memoria, ignis_pc.terminal;"
         "print(sorted({'sounddevice', 'sherpa_onnx'} & set(sys.modules)))"
     )
     saida = subprocess.run(

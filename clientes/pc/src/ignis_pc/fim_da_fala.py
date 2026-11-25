@@ -1,5 +1,6 @@
 """Decide quando o pedido terminou, depois que o Ignis foi chamado."""
 
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Protocol
@@ -16,13 +17,21 @@ class Resultado(Enum):
     """O pedido passou do tempo máximo e foi encerrado."""
 
 
+@dataclass(frozen=True)
+class Trecho:
+    """Um trecho de fala, em amostras contadas desde o último reinício."""
+
+    inicio: int
+    fim: int
+
+
 class DetectorDeVoz(Protocol):
     def reiniciar(self) -> None:
-        """Esquece tudo o que ouviu até agora."""
+        """Esquece tudo o que ouviu até agora e volta a contar do zero."""
         ...
 
-    def processar(self, bloco: Bloco) -> list[float]:
-        """Devolve a duração, em segundos, dos trechos de fala que terminaram."""
+    def processar(self, bloco: Bloco) -> list[Trecho]:
+        """Devolve os trechos de fala que terminaram."""
         ...
 
     def falando(self) -> bool:
@@ -54,13 +63,15 @@ class VadSilero:
     def reiniciar(self) -> None:
         self._vad.reset()
 
-    def processar(self, bloco: Bloco) -> list[float]:
+    def processar(self, bloco: Bloco) -> list[Trecho]:
         self._vad.accept_waveform(bloco)
-        duracoes = []
+        trechos = []
         while not self._vad.empty():
-            duracoes.append(len(self._vad.front.samples) / TAXA)
+            segmento = self._vad.front
+            inicio = segmento.start
+            trechos.append(Trecho(inicio, inicio + len(segmento.samples)))
             self._vad.pop()
-        return duracoes
+        return trechos
 
     def falando(self) -> bool:
         return self._vad.is_speech_detected()
@@ -83,20 +94,28 @@ class FimDaFala:
         maximo: float = 30.0,
     ) -> None:
         self._detector = detector
+        self._espera_padrao = espera_pelo_pedido
         self._espera = round(espera_pelo_pedido * TAXA)
         self._maximo = round(maximo * TAXA)
         self._amostras = 0
         self._ativo = False
+        self.atraso: float | None = None
+        """No último FIM: segundos entre o fim da fala e a decisão."""
 
     @property
     def ativo(self) -> bool:
         return self._ativo
 
-    def comecar(self) -> None:
-        """Chamado no momento da ativação."""
+    def comecar(self, espera_pelo_pedido: float | None = None) -> None:
+        """Chamado no momento da ativação, ou no começo de uma conversa."""
+        espera = (
+            self._espera_padrao if espera_pelo_pedido is None else espera_pelo_pedido
+        )
+        self._espera = round(espera * TAXA)
         self._detector.reiniciar()
         self._amostras = 0
         self._ativo = True
+        self.atraso = None
 
     def processar(self, bloco: Bloco) -> Resultado | None:
         if not self._ativo:
@@ -105,6 +124,7 @@ class FimDaFala:
         self._amostras += len(bloco)
 
         if trechos:
+            self.atraso = (self._amostras - trechos[-1].fim) / TAXA
             return self._encerrar(Resultado.FIM)
         if self._amostras >= self._maximo:
             return self._encerrar(Resultado.LIMITE)

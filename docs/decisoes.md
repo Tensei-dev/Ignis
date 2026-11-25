@@ -286,3 +286,15 @@ O detector de voz é reiniciado no chamado e só funciona durante o pedido. O pe
 **D58 · 2026-11-25 · Meta de latência contada a partir da percepção do fim da fala**
 A meta de menos de 1 s passa a ser contada do momento em que o Ignis percebe o fim da fala até o início da resposta. Antes disso, há o tempo para perceber o fim: os 0,8 s de silêncio da D42.
 *Motivo:* com voz sintética, só perceber o fim levou de 0,9 a 1,0 s. A meta antiga, contada do fim real da fala, não seria alcançável com 0,8 s de silêncio.
+
+**D59 · 2026-11-25 · Máquina de estados da escuta**
+O cliente fica sempre em um destes estados: esperando, ouvindo o pedido, conversa ou mudo. O que sai dele são eventos: chamado, pedido (com o áudio) e chamado sem pedido. O áudio do pedido tem os 2 s anteriores ao chamado, com a frase, mais tudo até o fim. Depois de cada pedido, a conversa fica aberta por 5 s, e um novo pedido dispensa o nome. Enquanto a T09 não existir, a conversa começa logo após o pedido; depois, passará a começar quando o Ignis terminar de responder. Os detectores de frase continuam recebendo o áudio durante o pedido, mas um novo chamado só vale quando o cliente está esperando.
+*Motivo:* juntar as peças num lugar só, testável sem microfone, com o comportamento da D48.
+
+**D60 · 2026-11-25 · "Ignis Arise" com o PC em uso promove o chamado**
+Com o PC em uso, o detector do nome dispara no "Ignis" de "Ignis Arise". Se o detector da frase confirmar logo depois, o chamado passa a ser pela frase e o acompanhamento do pedido recomeça, sem contar o "Arise".
+*Motivo:* num teste com voz sintética, "Ignis Arise" dito sozinho com o PC em uso virava um pedido com a palavra "Arise". Quando o pedido vem emendado na frase, o detector da frase pode não disparar, e o pedido sai marcado como chamado pelo nome, com o áudio completo.
+
+**D61 · 2026-11-25 · Comando `ignis-pc escutar`, com modo de depuração**
+O comando abre o microfone e mostra no terminal cada chamado, cada pedido e quanto o Ignis demorou para perceber o fim da fala. Com `--depurar`, cada pedido é salvo como WAV em `%LOCALAPPDATA%\Ignis\depuracao`, fora do git. Ainda não envia nada ao cérebro.
+*Motivo:* testar a escuta com o microfone real antes da T09, e juntar gravações reais para testar a transcrição na T07. Os WAVs guardam a voz em disco, por isso o modo vem desligado.

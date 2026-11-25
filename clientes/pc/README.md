@@ -22,6 +22,17 @@ uv run ignis-pc baixar-modelos
 
 Sem eles, os testes que usam o modelo real são pulados.
 
+## Testar a escuta
+
+```powershell
+uv run ignis-pc escutar
+```
+
+O terminal mostra cada chamado, cada pedido e quanto o Ignis demorou para perceber que você parou de falar. Ainda nada é enviado ao cérebro.
+
+- `--microfone "parte do nome"` escolhe o microfone, como `--microfone "High Definition"`.
+- `--depurar` salva cada pedido como WAV em `%LOCALAPPDATA%\Ignis\depuracao`. Os arquivos guardam a sua voz: apague-os quando não precisar mais.
+
 ## Regras
 
 - **O áudio nunca é gravado em disco**, exceto em modo de depuração, fora do git.
@@ -31,4 +42,4 @@ Sem eles, os testes que usam o modelo real são pulados.
 - **Microfone e alto-falante ficam atrás de interfaces**, para os testes rodarem no CI sem hardware de áudio.
 - O pacote importável é `ignis_pc`.
 
-Os motivos estão no [registro de decisões](../../docs/decisoes.md) (D17, D41 a D58).
+Os motivos estão no [registro de decisões](../../docs/decisoes.md) (D17, D41 a D61).
