@@ -1,5 +1,5 @@
 [project]
-name = "jarvis"
+name = "ignis"
 version = "0.1.0"
 license = "GPL-3.0-or-later"
 requires-python = ">=3.12"
@@ -29,4 +29,4 @@ line-length = 88
 select = ["E", "F", "I", "N", "UP", "B", "PLC2401", "PLC2403"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["jarvis_*"]
+known-first-party = ["ignis_*"]

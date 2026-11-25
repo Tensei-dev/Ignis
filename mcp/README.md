@@ -1,6 +1,6 @@
 # mcp
 
-Os servidores MCP do Jarvis, um por integração. Cada um expõe ao [cérebro](../cerebro/) as ferramentas de um serviço, e pode ser trocado sem mexer no resto.
+Os servidores MCP do Ignis, um por integração. Cada um expõe ao [cérebro](../cerebro/) as ferramentas de um serviço, e pode ser trocado sem mexer no resto.
 
 > 🚧 Ainda sem código. O primeiro servidor, o de tarefas, chega na v0.
 
@@ -24,7 +24,7 @@ mcp/
 └── tarefas/
     ├── pyproject.toml
     ├── src/
-    │   └── jarvis_tarefas/
+    │   └── ignis_tarefas/
     │       └── __init__.py
     └── tests/
 ```
@@ -32,7 +32,7 @@ mcp/
 ## Regras
 
 - **A pasta `mcp/` não tem `__init__.py`.** O SDK oficial também se chama `mcp`, e um `__init__.py` aqui poderia fazer o Python importar esta pasta no lugar dele.
-- **O pacote importável leva o prefixo `jarvis_`**, para não conflitar com bibliotecas de mesmo nome.
+- **O pacote importável leva o prefixo `ignis_`**, para não conflitar com bibliotecas de mesmo nome.
 - **O conteúdo lido não dá ordens.** O que vem de e-mails, posts e feeds é processado sem acesso às ferramentas de ação.
 
 Os motivos estão no [registro de decisões](../docs/decisoes.md).

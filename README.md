@@ -1,4 +1,4 @@
-# Jarvis
+# Ignis
 
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-orange)
 ![Python](https://img.shields.io/badge/python-3.12%2B-blue)
@@ -26,7 +26,7 @@ Assistente pessoal por voz que roda em casa. Ele ouve, decide e age nos meus apa
 
 | Recurso | Descrição | Versão |
 | --- | --- | --- |
-| 🎙️ Conversa por voz | No PC e no celular Android, ativado por "hey Jarvis" | v0 / v3 |
+| 🎙️ Conversa por voz | No PC e no celular Android, ativado por "Arise Ignis" | v0 / v3 |
 | 🛒 Lista de mercado | Adiciona e remove itens por voz e diz o que está faltando com mais urgência | v0 |
 | 💸 Contas a pagar | Lembra antes do vencimento e no dia | v0 |
 | 💡 Casa conectada | Controla a lâmpada e avisa quando a ração dos gatos está baixa | v1 |
@@ -40,20 +40,20 @@ Assistente pessoal por voz que roda em casa. Ele ouve, decide e age nos meus apa
 
 Um comando passa por estas etapas:
 
-1. **Ativação:** o cliente detecta "hey Jarvis" no próprio aparelho e só então envia o áudio ao cérebro. No PC, quem detecta é o openWakeWord.
+1. **Ativação:** o cliente detecta "Arise Ignis" no próprio aparelho e só então envia o áudio ao cérebro. No PC, quem detecta é o openWakeWord.
 2. **Ouvir:** o faster-whisper transcreve a fala.
 3. **Decidir:** o agente LLM interpreta o pedido e escolhe uma ferramenta da lista permitida.
-4. **Confirmar:** se a ação for sensível, o Jarvis pede confirmação por voz antes de seguir.
+4. **Confirmar:** se a ação for sensível, o Ignis pede confirmação por voz antes de seguir.
 5. **Agir:** a ferramenta é chamada no servidor MCP correspondente.
 6. **Falar:** o Kokoro TTS narra a resposta.
 
 Exemplos:
 
 ```text
-"Hey Jarvis, coloca leite e café na lista."
-"Hey Jarvis, quais contas vencem esta semana?"
-"Hey Jarvis, apaga a luz da sala."
-"Hey Jarvis, me acorda às 6 e meia."
+"Arise Ignis, coloca leite e café na lista."
+"Arise Ignis, quais contas vencem esta semana?"
+"Arise Ignis, apaga a luz da sala."
+"Arise Ignis, me acorda às 6 e meia."
 ```
 
 ## Arquitetura
@@ -111,7 +111,7 @@ flowchart TD
 ## Estrutura do repositório
 
 ```text
-jarvis/
+ignis/
 ├── cerebro/          # Orquestrador: STT, agente e TTS
 ├── mcp/              # Um servidor MCP por integração, cada um como pacote próprio
 ├── clientes/         # Pontos de voz (PC e Android): palavra de ativação e áudio
@@ -133,7 +133,7 @@ As decisões tomadas até aqui estão em [`docs/decisoes.md`](docs/decisoes.md),
 
 ## Roadmap
 
-- [ ] **v0: Jarvis no PC.** Voz, agente com a API do Claude, ferramentas, lista de mercado e contas
+- [ ] **v0: Ignis no PC.** Voz, agente com a API do Claude, ferramentas, lista de mercado e contas
 - [ ] **v1: Casa conectada.** Home Assistant, lâmpada, alimentador e reavaliação do Raspberry Pi
 - [ ] **v2: Cérebro próprio.** LLM local na GPU, avaliação, segurança e latência abaixo de 1 s
 - [ ] **v3: Assistente completo.** App Android, despertador, agenda, Spotify e resumo da manhã

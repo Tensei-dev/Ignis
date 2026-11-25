@@ -1,5 +1,5 @@
-import jarvis_cerebro
+import ignis_cerebro
 
 
 def test_import():
-    assert jarvis_cerebro.__name__ == "jarvis_cerebro"
+    assert ignis_cerebro.__name__ == "ignis_cerebro"
