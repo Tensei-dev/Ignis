@@ -7,6 +7,16 @@ dependencies = []
 
 [tool.uv]
 required-version = ">=0.13.9,<0.14"
+# O grupo gpu traz as bibliotecas da NVIDIA (mais de 1 GB). Ele é instalado por
+# padrão na máquina de desenvolvimento e desligado no CI com UV_NO_GROUP=gpu.
+default-groups = ["dev", "gpu"]
+# Sistemas em que todas as dependências precisam ter versão instalável: o PC de
+# desenvolvimento e o Linux do CI. Sem isso, o uv pode escolher uma versão das
+# bibliotecas da NVIDIA que só existe para Linux.
+required-environments = [
+    "sys_platform == 'win32' and platform_machine == 'AMD64'",
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+]
 
 [tool.uv.workspace]
 members = ["cerebro", "mcp/*", "clientes/*"]
@@ -16,6 +26,10 @@ dev = [
     "pre-commit>=4.7.0",
     "pytest>=9.2.0",
     "ruff>=0.17.6",
+]
+gpu = [
+    "nvidia-cublas-cu12>=12.9.2.10",
+    "nvidia-cudnn-cu12>=9.28.1.4",
 ]
 
 [tool.pytest.ini_options]

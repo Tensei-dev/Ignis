@@ -90,7 +90,8 @@ def mostrar(evento: Evento, pasta: Path | None) -> None:
                 detalhes += ", cortado no limite de 30 s"
             print(f"{hora}  PEDIDO: {detalhes}")
             if pasta:
-                print(f"          salvo em {salvar_wav(pedido.audio, pasta)}")
+                arquivo = salvar_wav(pedido.audio, pasta, origem_do_pedido(pedido))
+                print(f"          salvo em {arquivo}")
             print(f"{hora}  conversa aberta: fale de novo sem dizer o nome")
         case SemPedido(gatilho):
             if gatilho is None:
@@ -99,8 +100,13 @@ def mostrar(evento: Evento, pasta: Path | None) -> None:
                 print(f"{hora}  chamado sem pedido\n")
 
 
-def salvar_wav(audio: Bloco, pasta: Path) -> Path:
-    arquivo = pasta / f"pedido_{datetime.now():%Y%m%d_%H%M%S_%f}.wav"
+def origem_do_pedido(pedido: Pedido) -> str:
+    """ "frase", "nome" ou "conversa": vai no nome do WAV, para o cérebro saber."""
+    return pedido.gatilho.value if pedido.gatilho else "conversa"
+
+
+def salvar_wav(audio: Bloco, pasta: Path, origem: str) -> Path:
+    arquivo = pasta / f"pedido_{datetime.now():%Y%m%d_%H%M%S_%f}_{origem}.wav"
     amostras = (np.clip(audio, -1.0, 1.0) * 32767).astype(np.int16)
     with wave.open(str(arquivo), "wb") as saida:
         saida.setnchannels(1)
