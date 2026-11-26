@@ -132,7 +132,7 @@ Convenções:
 
 O cliente do PC é um processo separado do cérebro desde a v0. Assim, o cérebro pode mudar de máquina sem precisar ser reescrito.
 
-As decisões tomadas até aqui estão em [`docs/decisoes.md`](docs/decisoes.md), e as de arquitetura, em [`docs/adr/`](docs/adr/).
+As decisões tomadas até aqui estão em [`docs/decisoes.md`](docs/decisoes.md), e as de arquitetura, em [`docs/adr/`](docs/adr/). Os testes manuais que ainda faltam estão em [`docs/testes-pendentes.md`](docs/testes-pendentes.md).
 
 ## Roadmap
 
